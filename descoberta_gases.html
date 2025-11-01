@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Descoberta dos Gases - Feira de Ciências</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        @keyframes float { 
+            0%, 100% { transform: translateY(0px); } 
+            50% { transform: translateY(-8px); } 
+        }
+        @keyframes glow { 
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); } 
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.7); } 
+        }
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.03); } 
+        }
+        @keyframes bounce { 
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 
+            40% { transform: translateY(-10px); } 
+            60% { transform: translateY(-5px); } 
+        }
+        @keyframes shimmer { 
+            0% { background-position: -200% center; } 
+            100% { background-position: 200% center; } 
+        }
+        @keyframes highlight { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.02); border-color: #ffd700; } 
+            100% { transform: scale(1); } 
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Georgia', serif;
+            background: linear-gradient(135deg, #1a0f08 0%, #2c1810 50%, #1f3a1f 100%);
+            color: #f4e8d8;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(61, 40, 23, 0.98) 0%, rgba(29, 58, 31, 0.98) 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, rgba(26, 15, 8, 0.95), rgba(44, 24, 16, 0.95));
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 3px solid #d4af37;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            background: linear-gradient(135deg, #d4af37, #228b22);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            animation: bounce 2s infinite;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            animation: none;
+        }
+        
+        .visit-counter {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(26, 15, 8, 0.95), rgba(29, 58, 31, 0.95));
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 12px 18px;
+            color: #f4e8d8;
+            font-size: 13px;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .counter-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .counter-number {
+            font-weight: bold;
+            color: #d4af37;
+            font-size: 16px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+            background: linear-gradient(135deg, #d4af37, #ffd700, #228b22);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 15px 0 10px;
+            line-height: 1.2;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .subtitle {
+            font-size: 1em;
+            color: #c9a961;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .era-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .era-badge {
+            background: linear-gradient(135deg, rgba(139, 105, 20, 0.8), rgba(34, 139, 34, 0.8));
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 600;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #f4e8d8;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .era-badge:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            border-color: #d4af37;
+        }
+        
+        .content {
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, rgba(61, 40, 23, 0.9), rgba(29, 58, 31, 0.9));
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            animation: slideIn 0.6s ease-out;
+            position: relative;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, #228b22, #d4af37);
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .panel h2 {
+            color: #d4af37;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(34, 139, 34, 0.5);
+        }
+        
+        .panel:target {
+            animation: highlight 1s ease-out;
+            border-color: #d4af37;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+        
+        .invitation-panel {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(34, 139, 34, 0.15));
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+        
+        .invitation-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        .invitation-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .invitation-title {
+            color: #d4af37;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        .invitation-text {
+            color: #f4e8d8;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .invitation-highlight {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(34, 139, 34, 0.3));
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #ffd700;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            padding: 10px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #d4af37, #228b22);
+        }
+        
+        .timeline-item {
+            background: linear-gradient(135deg, rgba(26, 15, 8, 0.9), rgba(29, 58, 31, 0.9));
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 15px;
+            margin-left: 40px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -11px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: #d4af37;
+            border-radius: 50%;
+            border: 3px solid #1f3a1f;
+        }
+        
+        .climate-alert {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(255, 140, 0, 0.2));
+            border: 2px solid #ff6b6b;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .climate-alert::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f3a1f;
+            padding: 0 10px;
+            font-size: 1.2em;
+        }
+        
+        .co2-meter {
+            background: rgba(26, 15, 8, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .meter-bar {
+            height: 25px;
+            background: linear-gradient(90deg, #28a745 0%, #ffc107 50%, #dc3545 100%);
+            border-radius: 12px;
+            position: relative;
+            margin: 10px 0;
+        }
+        
+        .meter-indicator {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 30px;
+            background: white;
+            box-shadow: 0 0 10px rgba(255,255,255,0.8);
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .impact-card {
+            background: rgba(26, 15, 8, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .impact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border-color: #d4af37;
+        }
+        
+        .impact-icon {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+        }
+        
+        .impact-title {
+            color: #d4af37;
+            font-weight: 600;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+        
+        .plant-cycle {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .cycle-step {
+            background: rgba(34, 139, 34, 0.2);
+            border: 1px solid rgba(34, 139, 34, 0.5);
+            border-radius: 10px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .cycle-step:hover {
+            background: rgba(34, 139, 34, 0.3);
+            transform: scale(1.02);
+        }
+        
+        .cycle-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .experiment-card {
+            background: linear-gradient(135deg, rgba(34, 139, 34, 0.2), rgba(139, 105, 20, 0.2));
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .experiment-card h3 {
+            color: #ffd700;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .tip-box {
+            background: rgba(212, 175, 55, 0.2);
+            border-left: 3px solid #d4af37;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 0 5px 5px 0;
+            font-size: 0.85em;
+        }
+        
+        .scientist-accordion {
+            margin: 15px 0;
+        }
+        
+        .scientist-button {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(61, 40, 23, 0.9), rgba(29, 58, 31, 0.9));
+            border: 2px solid #d4af37;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .scientist-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            border-color: #ffd700;
+        }
+        
+        .scientist-button.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(34, 139, 34, 0.3));
+            border-color: #ffd700;
+        }
+        
+        .scientist-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .scientist-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #228b22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        
+        .scientist-name {
+            color: #d4af37;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .scientist-years {
+            color: #c9a961;
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .scientist-icon {
+            font-size: 20px;
+            color: #d4af37;
+            transition: transform 0.3s ease;
+        }
+        
+        .scientist-button.active .scientist-icon {
+            transform: rotate(180deg);
+        }
+        
+        .scientist-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: rgba(26, 15, 8, 0.6);
+            border-radius: 0 0 12px 12px;
+            margin-top: -10px;
+            padding: 0 20px;
+        }
+        
+        .scientist-content.active {
+            max-height: 2000px;
+            padding: 20px;
+        }
+        
+        .scientist-text {
+            color: #f4e8d8;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        
+        .scientist-text p {
+            margin-bottom: 15px;
+        }
+        
+        .scientist-highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .scientist-section-title {
+            color: #32cd32;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 15px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(50, 205, 50, 0.3);
+        }
+        
+        .footer {
+            background: linear-gradient(to top, rgba(26, 15, 8, 0.95), rgba(29, 58, 31, 0.95));
+            padding: 20px;
+            text-align: center;
+            border-top: 3px solid #d4af37;
+            color: #c9a961;
+            font-size: 0.9em;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+                border-radius: 20px;
+                border: 3px solid #d4af37;
+                margin: 20px auto;
+            }
+            
+            h1 { font-size: 2.5em; }
+            .era-badges { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+            .timeline { flex-direction: row; justify-content: space-between; }
+            .timeline::before { left: 0; right: 0; top: 50%; width: 100%; height: 2px; }
+            .timeline-item { margin-left: 0; margin-top: 40px; }
+            .impact-grid { grid-template-columns: repeat(3, 1fr); }
+            .plant-cycle { grid-template-columns: repeat(4, 1fr); }
+        }
+        
+        @media (min-width: 1024px) {
+            .container { max-width: 1200px; }
+            .content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+            .panel.full-width { grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-to-top" id="backToTop">
+        <span>⬆️</span>
+        <span>Topo</span>
+    </button>
+    
+    <div class="visit-counter">
+        <div class="counter-content">
+            <span>👁️</span>
+            <div>
+                <div style="font-size: 11px; opacity: 0.8;">Visitantes</div>
+                <div class="counter-number" id="visitorCount">0</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🌍 A DESCOBERTA DOS GASES 🌿</h1>
+            <p class="subtitle">Do Laboratório do Século XVIII à Crise Climática Global</p>
+            <div class="era-badges">
+                <a href="#iluminismo" class="era-badge">
+                    <span>⚗️</span>
+                    <span>Século XVIII - Iluminismo</span>
+                </a>
+                <a href="#clima" class="era-badge">
+                    <span>🌍</span>
+                    <span>Século XXI - Emergência Climática</span>
+                </a>
+                <a href="#impacto" class="era-badge">
+                    <span>🌱</span>
+                    <span>Impacto Global - CO₂</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="panel full-width">
+                <div class="invitation-panel">
+                    <div class="invitation-icon">🎭</div>
+                    <h2 class="invitation-title">Gostou da nossa jornada científica?</h2>
+                    <p class="invitation-text">
+                        Explore a fascinante história dos gases, desde as descobertas revolucionárias do Iluminismo até os desafios climáticos atuais. 
+                        Queremos convidá-lo para uma experiência ainda mais especial!
+                    </p>
+                    <div class="invitation-highlight">
+                        📍 4º Andar - Sala 1-A<br>
+                        <small style="font-size: 0.8em; opacity: 0.9;">Venha assistir às nossas apresentações ao vivo!</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel full-width">
+                <h2>🔥 DO PASSADO AO PRESENTE: A JORNADA DO CO₂</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div style="font-size: 1.5em; text-align: center;">🕯️</div>
+                        <div style="color: #d4af37; font-weight: bold; text-align: center;">1754</div>
+                        <div style="color: #c9a961; font-size: 0.85em; text-align: center;">Joseph Black<br>Descobre CO₂</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div style="font-size: 1.5em; text-align: center;">🏭</div>
+                        <div style="color: #d4af37; font-weight: bold; text-align: center;">1850</div>
+                        <div style="color: #c9a961; font-size: 0.85em; text-align: center;">Revolução<br>Industrial</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div style="font-size: 1.5em; text-align: center;">🌡️</div>
+                        <div style="color: #d4af37; font-weight: bold; text-align: center;">1958</div>
+                        <div style="color: #c9a961; font-size: 0.85em; text-align: center;">Curva de<br>Keeling</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div style="font-size: 1.5em; text-align: center;">🌍</div>
+                        <div style="color: #ff6347; font-weight: bold; text-align: center;">2025</div>
+                        <div style="color: #ff6347; font-size: 0.85em; text-align: center;">Crise<br>Climática</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel full-width" id="clima">
+                <h2>🌡️ ALERTA CLIMÁTICO: O CO₂ HOJE</h2>
+                
+                <div class="climate-alert">
+                    <h3 style="color: #ff6b6b; margin-bottom: 10px; text-align: center;">NÍVEIS ATMOSFÉRICOS DE CO₂</h3>
+                    <div class="co2-meter">
+                        <div class="meter-bar">
+                            <div class="meter-indicator"></div>
+                        </div>
+                        <div class="meter-labels">
+                            <span>280 ppm (1750)</span>
+                            <span style="color: #ff6b6b;">425 ppm (2025)</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.9em; margin-top: 10px;">
+                        <strong style="color: #ff6b6b;">+52%</strong> de aumento em 275 anos!<br>
+                        🌡️ +1.1°C de aquecimento global<br>
+                        📈 2.5 ppm/ano de aumento
+                    </p>
+                </div>
+
+                <div class="impact-grid">
+                    <div class="impact-card">
+                        <div class="impact-icon">🔥</div>
+                        <div class="impact-title">Aquecimento</div>
+                        <div style="color: #f4e8d8; font-size: 0.75em;">Temperaturas recordes</div>
+                    </div>
+                    <div class="impact-card">
+                        <div class="impact-icon">🌊</div>
+                        <div class="impact-title">Degelo</div>
+                        <div style="color: #f4e8d8; font-size: 0.75em;">Nível dos oceanos</div>
+                    </div>
+                    <div class="impact-card">
+                        <div class="impact-icon">🌪️</div>
+                        <div class="impact-title">Eventos</div>
+                        <div style="color: #f4e8d8; font-size: 0.75em;">Furacões e enchentes</div>
+                    </div>
+                    <div class="impact-card">
+                        <div class="impact-icon">🦋</div>
+                        <div class="impact-title">Biodiversidade</div>
+                        <div style="color: #f4e8d8; font-size: 0.75em;">Extinção de espécies</div>
+                    </div>
+                    <div class="impact-card">
+                        <div class="impact-icon">🌾</div>
+                        <div class="impact-title">Agricultura</div>
+                        <div style="color: #f4e8d8; font-size: 0.75em;">Impactos na produção</div>
+                    </div>
+                    <div class="impact-card">
+                        <div class="impact-icon">🏝️</div>
+                        <div class="impact-title">Ilhas</div>
+                        <div style="color: #f4e8d8; font-size: 0.75em;">Ameaçadas pela água</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="impacto">
+                <h2>🌿 AS PLANTAS: HEROÍNAS</h2>
+                
+                <div style="background: rgba(34, 139, 34, 0.2); border-radius: 10px; padding: 15px; margin: 15px 0;">
+                    <h3 style="color: #32cd32; text-align: center; margin-bottom: 10px; font-size: 1.1em;">🍃 Ciclo da Fotossíntese</h3>
+                    <div class="plant-cycle">
+                        <div class="cycle-step">
+                            <div class="cycle-icon">☀️</div>
+                            <div style="color: #d4af37; font-weight: 600; font-size: 0.8em;">Luz Solar</div>
+                            <div style="color: #f4e8d8; font-size: 0.7em;">Energia</div>
+                        </div>
+                        <div class="cycle-step">
+                            <div class="cycle-icon">💨</div>
+                            <div style="color: #d4af37; font-weight: 600; font-size: 0.8em;">CO₂ + H₂O</div>
+                            <div style="color: #f4e8d8; font-size: 0.7em;">Absorção</div>
+                        </div>
+                        <div class="cycle-step">
+                            <div class="cycle-icon">🌱</div>
+                            <div style="color: #d4af37; font-weight: 600; font-size: 0.8em;">Glicose</div>
+                            <div style="color: #f4e8d8; font-size: 0.7em;">Produção</div>
+                        </div>
+                        <div class="cycle-step">
+                            <div class="cycle-icon">💚</div>
+                            <div style="color: #d4af37; font-weight: 600; font-size: 0.8em;">O₂</div>
+                            <div style="color: #f4e8d8; font-size: 0.7em;">Liberação</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(26, 15, 8, 0.8); border-radius: 10px; padding: 15px; margin: 15px 0;">
+                    <h3 style="color: #32cd32; margin-bottom: 10px; font-size: 1.1em;">🌳 Poder das Árvores</h3>
+                    <ul style="color: #f4e8d8; line-height: 1.6; list-style: none; padding: 0; font-size: 0.9em;">
+                        <li>🌲 22 kg de CO₂/ano por árvore</li>
+                        <li>🌳 296 Gt de carbono nas florestas</li>
+                        <li>🌴 10% das emissões por desmatamento</li>
+                        <li>🌿 Reflorestamento: solução crucial</li>
+                        <li>🍃 50% do O₂ vem das plantas</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(34, 139, 34, 0.3), rgba(212, 175, 55, 0.3)); border-radius: 10px; padding: 15px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 8px;">🌎</div>
+                    <p style="font-size: 0.95em; margin: 0;">
+                        <strong style="color: #32cd32;">1 trilhão de árvores</strong><br>
+                        para compensar as emissões!
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>🔬 EXPERIMENTOS (Sem Fogo!)</h2>
+                
+                <div class="experiment-card">
+                    <h3>🎈 Experimento: Balão Inflável</h3>
+                    <p style="margin-bottom: 8px;"><strong style="color: #d4af37;">Materiais:</strong> Garrafa PET, vinagre, bicarbonato, balão</p>
+                    <ol style="padding-left: 20px; font-size: 0.9em; line-height: 1.5;">
+                        <li style="margin-bottom: 5px;">Coloque vinagre na garrafa (1/4)</li>
+                        <li style="margin-bottom: 5px;">Adicione bicarbonato no balão</li>
+                        <li style="margin-bottom: 5px;">Encaixe o balão na garrafa</li>
+                        <li style="margin-bottom: 5px;">Levante o balão e veja a mágica! 🎈</li>
+                    </ol>
+                    <div class="tip-box">
+                        <strong>💡 O que observar:</strong> CO₂ infla o balão instantaneamente!
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel full-width" id="iluminismo">
+                <h2>🎓 OS PIONEIROS DA QUÍMICA</h2>
+                
+                <div class="scientist-accordion">
+                    <div class="scientist-button" onclick="toggleScientist(this)">
+                        <div class="scientist-info">
+                            <div class="scientist-avatar">🧪</div>
+                            <div class="scientist-details">
+                                <div class="scientist-name">Joseph Black</div>
+                                <div class="scientist-years">(1728-1799) - Escócia</div>
+                            </div>
+                        </div>
+                        <div class="scientist-icon">▼</div>
+                    </div>
+                    <div class="scientist-content">
+                        <div class="scientist-text">
+                            <p>Joseph Black, químico escocês, descobriu o gás carbônico. Seu interesse inicial era por <span class="scientist-highlight">álcalis</span> (substância básica solúvel) como a água de cal, considerados úteis no tratamento de cálculos renais.</p>
+                            
+                            <div class="scientist-section-title">Descoberta do "Ar Fixo"</div>
+                            <p>Ao estudar carbonato de magnésio, ele descobriu que ao entrar em contato com ácidos ou aquecer, um gás era liberado, o qual ele chamou de <span class="scientist-highlight">"ar fixo"</span>, por ter sido combinado com um material sólido.</p>
+                            
+                            <div class="scientist-section-title">Calor Latente e Revolução Industrial</div>
+                            <p>Black era amigo do jovem James Watt, responsável pelo desenvolvimento das primeiras máquinas a vapor. Os aprimoramentos resultantes nas máquinas a vapor inauguraram a Revolução Industrial.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="scientist-button" onclick="toggleScientist(this)">
+                        <div class="scientist-info">
+                            <div class="scientist-avatar">🔬</div>
+                            <div class="scientist-details">
+                                <div class="scientist-name">Eunice Newton Foote</div>
+                                <div class="scientist-years">(1819-1888) - Estados Unidos</div>
+                            </div>
+                        </div>
+                        <div class="scientist-icon">▼</div>
+                    </div>
+                    <div class="scientist-content">
+                        <div class="scientist-text">
+                            <p>Em 1856, Eunice Newton Foote conduziu experimentos caseiros com cilindros preenchidos com diferentes gases.</p>
+                            
+                            <div class="scientist-section-title">Descoberta do Efeito Estufa</div>
+                            <p>O cilindro contendo dióxido de carbono aqueceu mais e permaneceu em temperatura elevada. Ela escreveu: <span class="scientist-highlight">"Uma atmosfera com esse gás daria à nossa Terra uma temperatura elevada"</span>, descrevendo o efeito estufa.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="scientist-button" onclick="toggleScientist(this)">
+                        <div class="scientist-info">
+                            <div class="scientist-avatar">⚗️</div>
+                            <div class="scientist-details">
+                                <div class="scientist-name">Henry Cavendish</div>
+                                <div class="scientist-years">(1731-1810) - Inglaterra</div>
+                            </div>
+                        </div>
+                        <div class="scientist-icon">▼</div>
+                    </div>
+                    <div class="scientist-content">
+                        <div class="scientist-text">
+                            <p>Henry Cavendish foi um químico e físico excepcional que fez descobertas importantes sobre <span class="scientist-highlight">hidrogênio</span>, <span class="scientist-highlight">dióxido de carbono</span>, ar atmosférico e água.</p>
+                            
+                            <div class="scientist-section-title">Água como Composto</div>
+                            <p>Ele produziu grandes quantidades de água queimando hidrogênio em oxigênio e reconheceu que estes eram seus únicos constituintes.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="scientist-button" onclick="toggleScientist(this)">
+                        <div class="scientist-info">
+                            <div class="scientist-avatar">🔍</div>
+                            <div class="scientist-details">
+                                <div class="scientist-name">Daniel Rutherford</div>
+                                <div class="scientist-years">(1749-1819) - Escócia</div>
+                            </div>
+                        </div>
+                        <div class="scientist-icon">▼</div>
+                    </div>
+                    <div class="scientist-content">
+                        <div class="scientist-text">
+                            <p>Rutherford postulou a existência de um gás que não catalisa reações de combustão, diferenciando-o de oxigênio e dióxido de carbono.</p>
+                            
+                            <div class="scientist-section-title">Isolamento do Nitrogênio</div>
+                            <p>Em 1772, conduziu um experimento que facilitou o isolamento desse gás. Chamou-o de ar <span class="scientist-highlight">"nocivo"</span>, pois organismos vivos não poderiam sobreviver nele.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="scientist-button" onclick="toggleScientist(this)">
+                        <div class="scientist-info">
+                            <div class="scientist-avatar">💨</div>
+                            <div class="scientist-details">
+                                <div class="scientist-name">Joseph Priestley</div>
+                                <div class="scientist-years">(1733-1804) - Inglaterra</div>
+                            </div>
+                        </div>
+                        <div class="scientist-icon">▼</div>
+                    </div>
+                    <div class="scientist-content">
+                        <div class="scientist-text">
+                            <p>Em 1º de agosto de 1774, Priestley obteve um gás incolor aquecendo óxido de mercúrio vermelho.</p>
+                            
+                            <div class="scientist-section-title">Descoberta do Oxigênio</div>
+                            <p>Descobrindo que uma vela queimava intensamente nesse gás, ele o chamou de <span class="scientist-highlight">"ar deflogisticado"</span>. O gás era "cinco ou seis vezes melhor que o ar comum".</p>
+                        </div>
+                    </div>
+                    
+                    <div class="scientist-button" onclick="toggleScientist(this)">
+                        <div class="scientist-info">
+                            <div class="scientist-avatar">🌍</div>
+                            <div class="scientist-details">
+                                <div class="scientist-name">Crise Climática Atual</div>
+                                <div class="scientist-years">Desafios do Século XXI</div>
+                            </div>
+                        </div>
+                        <div class="scientist-icon">▼</div>
+                    </div>
+                    <div class="scientist-content">
+                        <div class="scientist-text">
+                            <p>A crise climática é intensificada por eventos extremos e gases de efeito estufa. Segundo o IPCC, <span class="scientist-highlight">2025 é o limite</span> para que as emissões comecem a diminuir.</p>
+                            
+                            <div class="scientist-section-title">A Curva de Keeling</div>
+                            <p>É o registro de CO₂ atmosférico do Observatório Mauna Loa, iniciado em 1958, que documenta o aumento constante da concentração de dióxido de carbono na atmosfera.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>"Redescobrindo a química através dos olhos dos pioneiros"</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">🕯️ Iluminando mentes através da ciência experimental 🕯️</p>
+            <p style="margin-top: 15px; font-size: 0.8em; opacity: 0.7;">Feito por Catarina Petry</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Contador de visitantes
+            const counterElement = document.getElementById('visitorCount');
+            if (counterElement) {
+                const stored = parseInt(localStorage.getItem('visitorCount') || '0');
+                const newCount = stored + 1;
+                localStorage.setItem('visitorCount', newCount);
+                counterElement.textContent = newCount;
+            }
+            
+            // Botão Voltar ao Topo
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Função para accordion dos cientistas
+        function toggleScientist(button) {
+            const allButtons = document.querySelectorAll('.scientist-button');
+            const allContents = document.querySelectorAll('.scientist-content');
+            
+            allButtons.forEach(btn => {
+                if (btn !== button) {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            allContents.forEach(content => {
+                if (content !== button.nextElementSibling) {
+                    content.classList.remove('active');
+                }
+            });
+            
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+            content.classList.toggle('active');
+            
+            if (button.classList.contains('active')) {
+                setTimeout(function() {
+                    button.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>
